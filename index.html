@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen Escape</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="menu" class="menu">
+        <h1>Screen Escape</h1>
+        <button id="start-btn">Start</button>
+    </div>
+
+    <div id="game" class="hidden">
+        <div id="screen-time">
+            <div id="screen-fill"></div>
+        </div>
+        <canvas id="game-canvas" width="800" height="600"></canvas>
+        <div id="phone-overlay" class="hidden">
+            <h2>Phone</h2>
+            <div id="phone-content"></div>
+        </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
