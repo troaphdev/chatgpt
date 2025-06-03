@@ -1,51 +1,33 @@
-import Player from './Player.js';
-import Phone from './Phone.js';
-import GameState from './GameState.js';
+import GameManager from './GameManager.js';
 
-const canvas = document.getElementById('game-canvas');
-const ctx = canvas.getContext('2d');
+const container = document.getElementById('game-container');
 const startBtn = document.getElementById('start-btn');
-const menu = document.getElementById('menu');
-const gameDiv = document.getElementById('game');
+const restartBtn = document.getElementById('restart-btn');
+const restartWinBtn = document.getElementById('restart-win-btn');
 
-const player = new Player(400, 300);
-const phone = new Phone();
-const state = new GameState(menu, gameDiv);
-state.player = player;
+const game = new GameManager(container);
+game.init();
 
-let lastTime = 0;
+const keys = {};
 
-function gameLoop(timestamp) {
-    const delta = timestamp - lastTime;
-    lastTime = timestamp;
-
-    if (state.isPlaying()) {
-        player.update(delta);
-        state.update(delta, phone);
-        draw();
-    }
-
-    requestAnimationFrame(gameLoop);
+function loop() {
+    game.update(keys);
+    requestAnimationFrame(loop);
 }
 
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    player.draw(ctx);
-}
+startBtn.addEventListener('click', () => game.start());
+restartBtn.addEventListener('click', () => game.restart());
+restartWinBtn.addEventListener('click', () => game.restart());
 
 window.addEventListener('keydown', (e) => {
-    if (e.key === 'p' || e.key === 'P') {
-        phone.toggle();
+    if (e.key.toLowerCase() === 'p') {
+        game.phone.toggle();
     }
-    state.handleInput(e.key, true);
+    keys[e.key] = true;
 });
 
 window.addEventListener('keyup', (e) => {
-    state.handleInput(e.key, false);
+    keys[e.key] = false;
 });
 
-startBtn.addEventListener('click', () => {
-    state.start();
-});
-
-requestAnimationFrame(gameLoop);
+loop();

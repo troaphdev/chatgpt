@@ -7,21 +7,31 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="menu" class="menu">
+    <div id="menu" class="menu overlay">
         <h1>Screen Escape</h1>
         <button id="start-btn">Start</button>
     </div>
 
-    <div id="game" class="hidden">
-        <div id="screen-time">
-            <div id="screen-fill"></div>
-        </div>
-        <canvas id="game-canvas" width="800" height="600"></canvas>
-        <div id="phone-overlay" class="hidden">
-            <h2>Phone</h2>
-            <div id="phone-content"></div>
-        </div>
+    <div id="screen-time" class="hidden">
+        <div id="screen-fill"></div>
     </div>
+
+    <div id="phone-ui" class="overlay hidden">
+        <h2>Phone</h2>
+        <div id="phone-messages"></div>
+    </div>
+
+    <div id="game-over" class="overlay hidden">
+        <h1>Phone Took Over</h1>
+        <button id="restart-btn">Restart</button>
+    </div>
+
+    <div id="victory" class="overlay hidden">
+        <h1>You Escaped</h1>
+        <button id="restart-win-btn">Restart</button>
+    </div>
+
+    <div id="game-container"></div>
 
     <script type="module" src="js/main.js"></script>
 </body>
