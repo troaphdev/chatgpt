@@ -1,5 +1,5 @@
 import * as THREE from 'https://unpkg.com/three@0.155.0/build/three.module.js';
-import { PointerLockControls } from 'https://unpkg.com/three@0.155.0/examples/jsm/controls/PointerLockControls.js';
+import { PointerLockControls } from 'https://unpkg.com/three@0.155.0/examples/jsm/controls/PointerLockControls.js?module';
 import PhoneUI from './PhoneUI.js';
 import Events from './Events.js';
 
