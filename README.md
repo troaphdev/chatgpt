@@ -14,3 +14,12 @@ Open `index.html` in a modern browser or serve the folder with a local HTTP serv
 4. Save. GitHub will build and host the site at `https://<yourname>.github.io/<repo>/`.
 
 All game files are relative to the root path, so the game works directly on GitHub Pages without additional configuration.
+
+## Troubleshooting
+
+If the deployment fails:
+
+1. Check the **Actions** tab on GitHub and open the latest `pages-build-deployment` log for details.
+2. Ensure `index.html` exists in the repository root and that the **Source** in the Pages settings is set to the `main` branch and `/ (root)` folder.
+3. Remove any old files named just `index` (without extension) which can confuse the build pipeline.
+4. After correcting any issues, re-run the deployment from the Pages settings.
