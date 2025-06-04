@@ -4,7 +4,18 @@ Screen Escape is a small horror-puzzle web game written in vanilla HTML, CSS and
 
 ## Getting Started
 
-Open `index.html` in a modern browser or serve the folder with a local HTTP server (e.g. `npx http-server`).
+Open `index.html` in a modern browser or serve the folder with a local HTTP server (e.g. `npx http-server`). Because the game relies on ES modules loaded from a CDN, make sure you run it from `http://` rather than `file://`.
+
+### Module loading error
+
+If you see a console error like `Failed to resolve module specifier "three"` it means the browser could not locate the Three.js dependency. The game loads example controls from [unpkg](https://unpkg.com/) with the `?module` flag so imports resolve correctly. Ensure the import lines in `js/GameManager.js` look like this:
+
+```js
+import * as THREE from 'https://unpkg.com/three@0.155.0/build/three.module.js';
+import { PointerLockControls } from 'https://unpkg.com/three@0.155.0/examples/jsm/controls/PointerLockControls.js?module';
+```
+
+Clearing your browser cache and reloading the page after saving these changes should fix the issue.
 
 ## Deploying to GitHub Pages
 
