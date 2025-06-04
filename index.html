@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen Escape</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="menu" class="menu overlay">
+        <h1>Screen Escape</h1>
+        <button id="start-btn">Start</button>
+    </div>
+
+    <div id="screen-time" class="hidden">
+        <div id="screen-fill"></div>
+    </div>
+
+    <div id="phone-ui" class="overlay hidden">
+        <h2>Phone</h2>
+        <div id="phone-messages"></div>
+    </div>
+
+    <div id="npc-message" class="overlay hidden"></div>
+
+    <div id="game-over" class="overlay hidden">
+        <h1>Phone Took Over</h1>
+        <button id="restart-btn">Restart</button>
+    </div>
+
+    <div id="victory" class="overlay hidden">
+        <h1>You Found Water</h1>
+        <button id="restart-win-btn">Restart</button>
+    </div>
+
+    <div id="game-container"></div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
