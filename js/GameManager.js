@@ -2,7 +2,7 @@ import * as THREE from 'https://unpkg.com/three@0.155.0/build/three.module.js';
 import { PointerLockControls } from 'https://unpkg.com/three@0.155.0/examples/jsm/controls/PointerLockControls.js?module';
 import PhoneUI from './PhoneUI.js';
 import Events from './Events.js';
-import MazeGenerator from './MazeGenerator.js';
+import HallwayGenerator from './HallwayGenerator.js';
 import NPCManager from './NPCManager.js';
 import GoalObject from './GoalObject.js';
 
@@ -21,6 +21,7 @@ export default class GameManager {
         this.maze = null;
         this.npcs = null;
         this.goal = null;
+        this.colliders = []; // bounding boxes used for collision detection
 
         this.screenTime = 0;
         this.maxScreenTime = 100;
@@ -46,11 +47,24 @@ export default class GameManager {
         window.addEventListener('resize', () => this.onResize());
     }
 
-    /** Build maze, NPCs and goal */
+    /** Build the hallway path, NPCs and goal object */
     generateLevel() {
-        this.maze = new MazeGenerator(this.scene);
+        this.maze = new HallwayGenerator(this.scene);
         const endPos = this.maze.generate();
+        this.colliders = [...this.maze.getCollisionBoxes()];
+
         this.npcs = new NPCManager(this.scene, this.maze.cells);
+        this.colliders.push(...this.npcs.getCollisionBoxes());
+
+        // floor plane to catch gaps
+        const plane = new THREE.Mesh(
+            new THREE.PlaneGeometry(200, 200),
+            new THREE.MeshBasicMaterial({ color: 0x111111 })
+        );
+        plane.rotation.x = -Math.PI / 2;
+        plane.position.y = -0.51;
+        this.scene.add(plane);
+
         this.goal = new GoalObject(this.scene, endPos);
         this.camera.position.set(0, 1.6, 0);
     }
@@ -81,10 +95,24 @@ export default class GameManager {
         }
 
         const speed = 0.05 * delta;
+        const obj = this.controls.getObject();
+        const prev = obj.position.clone();
+
         if (keys['w'] || keys['ArrowUp']) this.controls.moveForward(speed);
         if (keys['s'] || keys['ArrowDown']) this.controls.moveForward(-speed);
         if (keys['a'] || keys['ArrowLeft']) this.controls.moveRight(-speed);
         if (keys['d'] || keys['ArrowRight']) this.controls.moveRight(speed);
+
+        // create player's bounding box around camera position
+        const playerBox = new THREE.Box3().setFromCenterAndSize(
+            new THREE.Vector3(obj.position.x, 1, obj.position.z),
+            new THREE.Vector3(1, 3, 1)
+        );
+
+        if (this.checkCollision(playerBox)) {
+            // revert to previous position if collided
+            obj.position.copy(prev);
+        }
 
         if (this.goal.reached(this.controls.getObject().position)) {
             this.win();
@@ -128,5 +156,13 @@ export default class GameManager {
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    /** Check player box against all colliders */
+    checkCollision(box) {
+        for (const c of this.colliders) {
+            if (box.intersectsBox(c)) return true;
+        }
+        return false;
     }
 }

@@ -9,6 +9,7 @@ export default class NPCManager {
         this.scene = scene;
         this.cells = cells;
         this.npcs = [];
+        this.boxes = []; // bounding boxes for collision
         this.messageEl = document.getElementById('npc-message');
         this.messageTimer = 0;
         this.spawnNPCs();
@@ -33,6 +34,9 @@ export default class NPCManager {
         mesh.userData.type = type;
         this.scene.add(mesh);
         this.npcs.push(mesh);
+
+        // bounding box for collision (NPCs don't move)
+        this.boxes.push(new THREE.Box3().setFromObject(mesh));
     }
 
     /** Update NPC interactions */
@@ -50,6 +54,11 @@ export default class NPCManager {
                 this.showMessage(npc.userData.type);
             }
         }
+    }
+
+    /** Return bounding boxes for collision checks */
+    getCollisionBoxes() {
+        return this.boxes;
     }
 
     showMessage(type) {
