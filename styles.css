@@ -53,6 +53,12 @@ body {
     height: 100vh;
 }
 
+#npc-message {
+    bottom: 10%;
+    top: auto;
+    width: 250px;
+}
+
 #effect-overlay {
     position: absolute;
     top: 0;

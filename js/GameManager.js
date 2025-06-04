@@ -2,6 +2,9 @@ import * as THREE from 'https://unpkg.com/three@0.155.0/build/three.module.js';
 import { PointerLockControls } from 'https://unpkg.com/three@0.155.0/examples/jsm/controls/PointerLockControls.js?module';
 import PhoneUI from './PhoneUI.js';
 import Events from './Events.js';
+import MazeGenerator from './MazeGenerator.js';
+import NPCManager from './NPCManager.js';
+import GoalObject from './GoalObject.js';
 
 export default class GameManager {
     constructor(container) {
@@ -14,6 +17,10 @@ export default class GameManager {
 
         this.phone = new PhoneUI(this);
         this.events = new Events(this);
+
+        this.maze = null;
+        this.npcs = null;
+        this.goal = null;
 
         this.screenTime = 0;
         this.maxScreenTime = 100;
@@ -34,13 +41,18 @@ export default class GameManager {
 
         this.controls = new PointerLockControls(this.camera, document.body);
 
-        const geometry = new THREE.BoxGeometry(20, 20, 20);
-        const material = new THREE.MeshBasicMaterial({ color: 0x444444, wireframe: true });
-        const room = new THREE.Mesh(geometry, material);
-        room.position.y = 10;
-        this.scene.add(room);
+        this.generateLevel();
 
         window.addEventListener('resize', () => this.onResize());
+    }
+
+    /** Build maze, NPCs and goal */
+    generateLevel() {
+        this.maze = new MazeGenerator(this.scene);
+        const endPos = this.maze.generate();
+        this.npcs = new NPCManager(this.scene, this.maze.cells);
+        this.goal = new GoalObject(this.scene, endPos);
+        this.camera.position.set(0, 1.6, 0);
     }
 
     /** Start the game and reset values */
@@ -60,6 +72,7 @@ export default class GameManager {
         }
 
         this.phone.update(delta);
+        this.npcs.update(this.controls.getObject().position, delta);
         this.events.check(this.screenTime);
         this.updateBar();
 
@@ -72,6 +85,10 @@ export default class GameManager {
         if (keys['s'] || keys['ArrowDown']) this.controls.moveForward(-speed);
         if (keys['a'] || keys['ArrowLeft']) this.controls.moveRight(-speed);
         if (keys['d'] || keys['ArrowRight']) this.controls.moveRight(speed);
+
+        if (this.goal.reached(this.controls.getObject().position)) {
+            this.win();
+        }
 
         this.renderer.render(this.scene, this.camera);
     }

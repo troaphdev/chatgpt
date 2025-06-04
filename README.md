@@ -2,6 +2,8 @@
 
 Screen Escape is a small horror-puzzle web game written in vanilla HTML, CSS and JavaScript. The current build uses [Three.js](https://threejs.org/) for a simple 3D environment and loads all assets from this repository.
 
+The map is generated procedurally at runtime with a series of hallway segments. Logan must navigate the maze, avoid nagging family members, and reach a cup of water before the screen‑time bar fills up.
+
 ## Getting Started
 
 Open `index.html` in a modern browser or serve the folder with a local HTTP server (e.g. `npx http-server`). Because the game relies on ES modules loaded from a CDN, make sure you run it from `http://` rather than `file://`.
